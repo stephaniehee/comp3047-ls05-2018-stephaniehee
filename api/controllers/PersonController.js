@@ -146,5 +146,25 @@ paginate: async function (req, res) {
 
     return res.view('person/paginate', { 'persons': persons, 'count': numOfPage });
 },
+
+ // action -- Showing Supervisors
+populate: async function (req, res) {
+
+  //  http://localhost:1337/person/28/worksFor
+
+    if (!['worksFor'].includes(req.params.association)) return res.notFound();
+
+    const message = sails.getInvalidIdMsg(req.params);
+
+    if (message) return res.badRequest(message);
+
+    var model = await Person.findOne(req.params.id).populate(req.params.association);
+
+    if (!model) return res.notFound();
+
+    return res.json(model);
+
+},
+
 };
 
